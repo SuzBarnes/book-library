@@ -1,0 +1,41 @@
+{
+  "name": "book-library",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "node scripts/create-database.js",
+    "start": "nodemon -r dotenv/config index.js",
+    "test": "mocha tests/**/*.js",
+    "pre-test": "node scripts/create-database.js",
+    "post-test": "node scripts/drop-database.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SuzBarnes/book-library.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SuzBarnes/book-library/issues"
+  },
+  "homepage": "https://github.com/SuzBarnes/book-library#readme",
+  "keywords": [],
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "dotenv": "^16.0.1",
+    "eslint": "^8.22.0",
+    "eslint-plugin-react": "^7.30.1",
+    "express": "^4.18.1",
+    "mocha": "^10.0.0",
+    "mysql2": "^2.3.3",
+    "nodemon": "^2.0.19",
+    "supertest": "^6.2.4"
+  },
+  "dependencies": {
+    "sequelize": "^6.21.4"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "description": ""
+}
