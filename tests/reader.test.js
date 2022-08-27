@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const request = require('supertest');
-const { Reader } = require('../src/models');
+const { Reader } = require('../src/models/reader');
 const app = require('../src/app');
 
 describe('/readers', () => {
@@ -12,11 +12,17 @@ describe('/readers', () => {
 
   describe('with no records in the database', () => {
     describe('POST /reader', () => {
-      it('creates a new reader in the database', async () => {
-        const response = await request(app).post('/reader').send({
+      let response;
+
+      beforeEach(async () => {
+        response = await request(app).post('/reader').send({
           name: 'Elizabeth Bennet',
           email: 'future_ms_darcy@gmail.com',
+          password: 'MrD4rcy<3'
         });
+      })
+      it('creates a new reader in the database', async () => {
+        
         const newReaderRecord = await Reader.findByPk(response.body.id, {
           raw: true,
         });
@@ -25,7 +31,27 @@ describe('/readers', () => {
         expect(response.body.name).to.equal('Elizabeth Bennet');
         expect(newReaderRecord.name).to.equal('Elizabeth Bennet');
         expect(newReaderRecord.email).to.equal('future_ms_darcy@gmail.com');
+        expect(newReaderRecord.password).to.equal('MrD4rcy<3');
       });
+      it('has to have a password 8 or more characters long', async () => {
+        const badReaderPassword = await request(app).post('/reader').send({
+          name: 'Elizabeth Bennet',
+          email: 'future_ms_darcy@gmail.com',
+          password: 'MrD4rcy'
+        });
+
+        expect(badReaderPassword.status).to.equal(400);
+        expect(badReaderPassword.body).to.deep.equal({error: 'Password length must be 8 or more characters.'})
+      });
+      it('returns a 400 if no password is set', async () => {
+        const noReaderPassword = await request(app).post('/reader').send({
+          name: 'A A Milne',
+          email: 'Winnie_The_Pooh@honeypot.co.uk',
+          password: ''
+        });
+        expect(noReaderPassword.status).to.equal(400);
+        expect(noReaderPassword.body).to.deep.equal({error: 'Please create a password which must be 8 or more characters.'})
+      })
     });
   });
 
@@ -37,9 +63,18 @@ describe('/readers', () => {
         Reader.create({
           name: 'Elizabeth Bennet',
           email: 'future_ms_darcy@gmail.com',
+          password: 'MrD4rcy<3',
         }),
-        Reader.create({ name: 'Arya Stark', email: 'vmorgul@me.com' }),
-        Reader.create({ name: 'Lyra Belacqua', email: 'darknorth123@msn.org' }),
+        Reader.create({ 
+          name: 'Arya Stark',
+         email: 'vmorgul@me.com',
+          password: 'TheHound'
+        }),
+        Reader.create({ 
+          name: 'Lyra Belacqua',
+          email: 'darknorth123@msn.org',
+          password: 'DaemonWill'
+        }),
       ]);
     });
 
@@ -67,6 +102,7 @@ describe('/readers', () => {
         expect(response.status).to.equal(200);
         expect(response.body.name).to.equal(reader.name);
         expect(response.body.email).to.equal(reader.email);
+        expect(response.body.password).to.equal(reader.password);
       });
 
       it('returns a 404 if the reader does not exist', async () => {
