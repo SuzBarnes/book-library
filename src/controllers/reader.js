@@ -1,10 +1,10 @@
 const {Reader} = require('../models');
-const reader = require('../models/reader');
+
 
 exports.create= async (req, res) => {
     const newReader = await Reader.create(req.body);
     const newReaderPassword = newReader.dataValues.password;
-    console.log(newReaderPassword)
+
     if(!newReaderPassword){
         res.status(400).json({error: 'Please create a password which must be 8 or more characters.'})
     } else if (newReaderPassword.length < 8){
@@ -16,7 +16,10 @@ exports.create= async (req, res) => {
 
 exports.read= async(req, res) => {
     const readers = await Reader.findAll();
-    res.status(200).json(readers);
+    try{ res.status(200).json(readers);
+    } catch(err){
+        res.status(500).json(err)
+    }
 };
 
 exports.readById = async(req, res) => {
