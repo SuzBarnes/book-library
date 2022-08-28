@@ -23,10 +23,10 @@ const setUpDatabase = async () => {
 
     await db.query(`CREATE DATABASE IF NOT EXISTS ${DB_NAME}`);
     await db.query(`USE ${DB_NAME}`);
-  
+
     db.end();
   } catch (err) {
-   
+
     console.log(
       `Your environment variables might be wrong. Please double check .env file`
     );

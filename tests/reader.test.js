@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const request = require('supertest');
-const { Reader } = require('../src/models/reader');
+const { Reader } = require('../src/models');
 const app = require('../src/app');
 
 describe('/readers', () => {
@@ -50,7 +50,7 @@ describe('/readers', () => {
           password: ''
         });
         expect(noReaderPassword.status).to.equal(400);
-        expect(noReaderPassword.body).to.deep.equal({error: 'Please create a password which must be 8 or more characters.'})
+        expect(noReaderPassword.body).to.deep.equal({error: 'Password length must be 8 or more characters.'})
       })
     });
   });

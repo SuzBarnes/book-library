@@ -1,8 +1,15 @@
-const {Reader} = require('../models/reader');
+const {Reader} = require('../models');
 
 exports.create= async (req, res) => {
     const newReader = await Reader.create(req.body);
+    const newReaderPassword = newReader.dataValues.password;
+    if(!newReaderPassword){
+        res.status(400).json({error: 'Password length must be 8 or more characters.'})
+    } else if (newReaderPassword.length < 8){
+        res.status(400).json({error: 'Password length must be 8 or more characters.'})
+    } else {
     res.status(201).json(newReader);
+    }
 };
 
 exports.read= async(req, res) => {
