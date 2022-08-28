@@ -6,8 +6,8 @@
     "prestart": "node scripts/create-database.js",
     "start": "nodemon -r dotenv/config index.js",
     "test": "mocha tests/**/*.js --exit --recursive --timeout 60000 --file ./tests/test-setup.js",
-    "pre-test": "node scripts/create-database.js test",
-    "post-test": "node scripts/drop-database.js"
+    "pretest": "node scripts/create-database.js test",
+    "posttest": "node scripts/drop-database.js"
   },
   "author": "",
   "license": "ISC",
